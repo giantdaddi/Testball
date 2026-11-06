@@ -1,0 +1,14 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/pointing.h>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            //            P1.04       P1.06
+            bindings = <&mkp LCLK   &bt BT_CLR>;
+        };
+    };
+};

@@ -1,0 +1,9 @@
+# GitHub builds one firmware file per entry below.
+---
+include:
+  # The trackball test firmware
+  - board: nice_nano//zmk
+    shield: trackball_test
+  # Wipes stored Bluetooth pairings, flash only if pairing gets stuck
+  - board: nice_nano//zmk
+    shield: settings_reset

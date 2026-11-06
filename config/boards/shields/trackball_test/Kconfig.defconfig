@@ -1,0 +1,7 @@
+if SHIELD_TRACKBALL_TEST
+
+# This is the name you'll see in your computer's Bluetooth list (max 16 characters)
+config ZMK_KEYBOARD_NAME
+    default "Trackball Test"
+
+endif

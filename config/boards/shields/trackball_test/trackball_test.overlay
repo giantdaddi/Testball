@@ -1,0 +1,89 @@
+/*
+ * Trackball test: nice!nano v2 + one PMW3610 sensor + two test buttons.
+ *
+ * Wiring (sensor module -> nice!nano):
+ *   VDD, VDDIO, NRESET -> VCC (3.3 V)   NOT RAW / B+
+ *   GND                -> GND
+ *   SCLK               -> P0.17
+ *   SDIO               -> P0.20
+ *   NCS                -> P1.00
+ *   MOTION             -> P0.11
+ *
+ * Buttons (optional, each between the pin and GND):
+ *   P1.04 -> left click
+ *   P1.06 -> clear Bluetooth pairing
+ */
+
+#include <dt-bindings/zmk/matrix_transform.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/* The nRF52 shares one hardware block between i2c0 and spi0.
+   We use it for SPI, so make sure I2C is off. */
+&i2c0 {
+    status = "disabled";
+};
+
+&pinctrl {
+    spi0_default: spi0_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 17)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 20)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 20)>;  /* PMW3610 uses one shared data wire */
+        };
+    };
+
+    spi0_sleep: spi0_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 17)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 20)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 20)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi0 {
+    status = "okay";
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;            /* NCS -> P1.00 */
+
+    trackball: trackball@0 {
+        status = "okay";
+        compatible = "pixart,pmw3610-alt";
+        reg = <0>;
+        spi-max-frequency = <2000000>;
+        irq-gpios = <&gpio0 11 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  /* MOTION -> P0.11 */
+        cpi = <800>;                                   /* cursor speed, raise for faster */
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
+
+        /* Uncomment if the cursor moves the wrong way: */
+        // swap-xy;
+        // invert-x;
+        // invert-y;
+    };
+};
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+    };
+
+    kscan0: kscan {
+        compatible = "zmk,kscan-gpio-direct";
+        wakeup-source;
+        input-gpios
+            = <&gpio1 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>   /* P1.04 left click */
+            , <&gpio1 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>   /* P1.06 BT clear */
+            ;
+    };
+
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>;
+    };
+};
