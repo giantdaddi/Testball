@@ -8,8 +8,9 @@ include:
   - board: nice_nano//zmk
     shield: trackball_test
     snippet: zmk-usb-logging
-    # Sensor waits 10 s before starting, so there is time to open the log window
-    cmake-args: -DCONFIG_PMW3610_ALT_LOG_LEVEL_DBG=y -DCONFIG_PMW3610_ALT_INIT_POWER_UP_EXTRA_DELAY_MS=10000
+    # Sensor waits 10 s before starting (time to open the log window).
+    # Power probe on P0.31 logs HIGH/LOW once per second.
+    cmake-args: -DCONFIG_PMW3610_ALT_LOG_LEVEL_DBG=y -DCONFIG_PMW3610_ALT_INIT_POWER_UP_EXTRA_DELAY_MS=10000 -DCONFIG_TB_PROBE=y
     artifact-name: trackball_test_DEBUG
   # Wipes stored Bluetooth pairings, flash only if pairing gets stuck
   - board: nice_nano//zmk

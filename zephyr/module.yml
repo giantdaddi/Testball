@@ -1,0 +1,4 @@
+name: testball-probe
+build:
+  cmake: .
+  kconfig: Kconfig

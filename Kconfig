@@ -1,0 +1,3 @@
+config TB_PROBE
+    bool "Power probe: log whether P0.31 sees 3.3 V, once per second"
+    default n
