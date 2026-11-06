@@ -1,5 +1,6 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/pointing.h>
 
 / {
@@ -8,7 +9,8 @@
 
         default_layer {
             //            P1.04       P1.06
-            bindings = <&mkp LCLK   &bt BT_CLR>;
+            // P1.06 temporarily toggles the VCC output pin (for power testing).
+            bindings = <&mkp LCLK   &ext_power EP_TOG>;
         };
     };
 };

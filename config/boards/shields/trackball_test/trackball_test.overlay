@@ -11,7 +11,7 @@
  *
  * Buttons (optional, each between the pin and GND):
  *   P1.04 -> left click
- *   P1.06 -> clear Bluetooth pairing
+ *   P1.06 -> toggle VCC output on/off (power testing)
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
