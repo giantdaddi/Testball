@@ -4,6 +4,12 @@ include:
   # The trackball test firmware
   - board: nice_nano//zmk
     shield: trackball_test
+  # Same firmware, with debug messages over USB (for troubleshooting)
+  - board: nice_nano//zmk
+    shield: trackball_test
+    snippet: zmk-usb-logging
+    cmake-args: -DCONFIG_PMW3610_ALT_LOG_LEVEL_DBG=y
+    artifact-name: trackball_test_DEBUG
   # Wipes stored Bluetooth pairings, flash only if pairing gets stuck
   - board: nice_nano//zmk
     shield: settings_reset
